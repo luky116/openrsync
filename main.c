@@ -37,6 +37,7 @@
 #endif
 
 #include "extern.h"
+#include "externc.h"
 
 int verbose;
 int poll_timeout;
@@ -355,7 +356,7 @@ const struct option	 lopts[] = {
 };
 
 int
-main(int argc, char *argv[])
+execute(int argc, char *argv[])
 {
 	pid_t		 child;
 	int		 fds[2], sd = -1, rc, c, st, i, lidx;
@@ -511,7 +512,8 @@ basedir:
 		case OP_VERSION:
 			fprintf(stderr, "openrsync: protocol version %u\n",
 			    RSYNC_PROTOCOL);
-			exit(0);
+			// exit(0);
+			return 0;
 		case 'h':
 		default:
 			goto usage;
@@ -541,7 +543,9 @@ basedir:
 	 * host by the parent.
 	 */
 
-	if (opts.server)
+	if (opts.server) {
+
+	}
 		exit(rsync_server(&opts, (size_t)argc, argv));
 
 	/*
@@ -570,7 +574,8 @@ basedir:
 			rc = rsync_socket(&opts, sd, fargs);
 			close(sd);
 		}
-		exit(rc);
+		// exit(rc);
+		return rc;
 	}
 
 	/* Drop the dns/inet possibility. */
@@ -611,11 +616,14 @@ basedir:
 
 		/* Make sure the child's stdin is from the sender. */
 		if (dup2(fds[1], STDIN_FILENO) == -1)
-			err(ERR_IPC, "dup2");
+			// err(ERR_IPC, "dup2");
+			return ERR_IPC;
 		if (dup2(fds[1], STDOUT_FILENO) == -1)
-			err(ERR_IPC, "dup2");
+			// err(ERR_IPC, "dup2");
+			return ERR_IPC;
 		execvp(args[0], args);
-		_exit(ERR_IPC);
+		// _exit(ERR_IPC);
+		return ERR_IPC;
 		/* NOTREACHED */
 	default:
 		close(fds[1]);
@@ -645,8 +653,8 @@ basedir:
 		else
 			rc = ERR_WAITPID;
 	}
-
-	exit(rc);
+	return rc;
+	// exit(rc);
 usage:
 	fprintf(stderr, "usage: %s"
 	    " [-aDglnoprtvx] [-e program] [--address=sourceaddr]\n"
@@ -655,5 +663,6 @@ usage:
 	    "\t[--port=portnumber] [--rsync-path=program] [--timeout=seconds]\n"
 	    "\t[--version] source ... directory\n",
 	    getprogname());
-	exit(ERR_SYNTAX);
+	return ERR_SYNTAX;
+	// exit(ERR_SYNTAX);
 }

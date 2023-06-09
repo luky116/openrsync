@@ -78,7 +78,8 @@ verrc(int eval, int code, const char *fmt, va_list ap)
 		fprintf(stderr, ": ");
 	}
 	fprintf(stderr, "%s\n", strerror(code));
-	exit(eval);
+	return eval
+	// exit(eval);
 }
 
 void
@@ -88,7 +89,8 @@ verrx(int eval, const char *fmt, va_list ap)
 	if (fmt != NULL)
 		vfprintf(stderr, fmt, ap);
 	fprintf(stderr, "\n");
-	exit(eval);
+	return eval;
+	// exit(eval);
 }
 
 void
@@ -103,7 +105,8 @@ verr(int eval, const char *fmt, va_list ap)
 		fprintf(stderr, ": ");
 	}
 	fprintf(stderr, "%s\n", strerror(sverrno));
-	exit(eval);
+	return eval;
+	// exit(eval);
 }
 
 void

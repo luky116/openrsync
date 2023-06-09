@@ -1,5 +1,12 @@
 Makefile.configure
 config.h
+config.h.*
 config.log
+config.log.*
 *.o
-openrsync
+
+test*
+!tests.c
+build
+.cache
+.vscode

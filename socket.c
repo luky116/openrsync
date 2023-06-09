@@ -295,13 +295,15 @@ rsync_connect(const struct opts *opts, int *sd, const struct fargs *f)
 
 	if ((src = inet_resolve(&sess, f->host, &srcsz, 0)) == NULL) {
 		ERRX1("inet_resolve");
-		exit(1);
+		return 1;
+		// exit(1);
 	}
 	if (opts->address != NULL)
 		if ((bsrc = inet_resolve(&sess, opts->address, &bsrcsz, 1)) ==
 		    NULL) {
 			ERRX1("inet_resolve bind");
-			exit(1);
+			return 1;
+			// exit(1);
 		}
 
 	/* Drop the DNS pledge. */
@@ -309,7 +311,8 @@ rsync_connect(const struct opts *opts, int *sd, const struct fargs *f)
 	if (pledge("stdio unix rpath wpath cpath dpath fattr chown getpw inet unveil",
 	    NULL) == -1) {
 		ERR("pledge");
-		exit(1);
+		return 1;
+		// exit(1);
 	}
 
 	/*
