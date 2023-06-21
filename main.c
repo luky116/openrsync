@@ -544,9 +544,8 @@ basedir:
 	 */
 
 	if (opts.server) {
-
+        return rsync_server(&opts, (size_t)argc, argv);
 	}
-		exit(rsync_server(&opts, (size_t)argc, argv));
 
 	/*
 	 * Now we know that we're the client on the local machine
